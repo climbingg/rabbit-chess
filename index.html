@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f5ed">
+<title>狗抓兔子｜兔子逃脫戰</title>
+<style>
+:root{--ink:#253a30;--muted:#738178;--leaf:#4e8066;--leaf-dark:#315d48;--mint:#e8f2e8;--cream:#fffaf2;--paper:#fffefb;--orange:#ed9a55;--pink:#f4d7dc;--line:#d8e0d4;--shadow:0 18px 46px rgba(42,67,51,.10)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);background:radial-gradient(circle at 10% 2%,#fff0e3 0,transparent 23rem),radial-gradient(circle at 95% 12%,#e7f2df 0,transparent 28rem),var(--cream);font-family:ui-rounded,"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
+button{font:inherit}
+.page{max-width:1180px;margin:auto;padding:24px 22px 30px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:25px}
+.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:48px;height:48px;border-radius:17px;background:var(--leaf);display:grid;place-items:center;box-shadow:0 7px 15px #315d4825}.brand-mark svg{width:33px;height:33px}.brand-name{font-weight:950;font-size:19px;letter-spacing:.04em}.brand-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.top-chip{border:1px solid #dce7d9;border-radius:99px;background:#ffffffa6;color:var(--leaf-dark);padding:9px 14px;font-size:12px;font-weight:800;white-space:nowrap}
+.intro{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:0 0 22px;padding:23px 27px;border-radius:25px;background:linear-gradient(110deg,#edf5e9,#fff2e8);border:1px solid #e5ebdf;overflow:hidden;position:relative}
+.intro:after{content:"";position:absolute;width:220px;height:220px;border:28px solid #ffffff50;border-radius:50%;right:21%;top:-155px;pointer-events:none}
+.intro-copy{position:relative;z-index:1}.eyebrow{font-size:12px;color:var(--leaf);font-weight:950;letter-spacing:.14em;margin-bottom:7px}.intro h1{font-size:clamp(25px,4vw,38px);line-height:1.22;margin:0 0 8px;font-weight:1000;letter-spacing:-.035em}.intro p{margin:0;color:#64776b;line-height:1.7;font-size:14px;max-width:620px}.intro-art{flex:0 0 145px;width:145px;height:110px;position:relative;z-index:1}.intro-art svg{width:100%;height:100%;overflow:visible}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.card{background:var(--paper);border:1px solid #e9e9de;border-radius:24px;box-shadow:var(--shadow)}
+.board-card{padding:19px 18px 15px;min-width:0}.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.card-title{font-size:17px;font-weight:950;display:flex;align-items:center;gap:9px}.mini-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:var(--mint);font-size:16px}.step-badge{background:#f6f0e4;color:#77674c;border-radius:99px;padding:7px 11px;font-size:12px;font-weight:900;white-space:nowrap}.board-wrap{border:1px solid #e6e9df;border-radius:19px;background:linear-gradient(145deg,#fbfcf5,#f2f7ee);overflow-x:auto;padding:7px 5px;position:relative}.board-svg{display:block;width:100%;min-width:550px;height:auto;max-height:475px;margin:auto;touch-action:manipulation}.edge{stroke:#c8d8c7;stroke-width:5;stroke-linecap:round;fill:none}.edge-accent{stroke:#b4cbb7;stroke-width:2;stroke-linecap:round;fill:none;opacity:.9}.node-hit{cursor:pointer;outline:none}.node-base{fill:#fffefb;stroke:#cbdacb;stroke-width:3;transition:fill .18s,stroke .18s}.node-number{font-family:inherit;font-size:13px;font-weight:900;fill:#849486;text-anchor:middle}.node-target .target-ring{fill:#dff3d8;stroke:#58906a;stroke-width:4;animation:pulse 1.4s ease-in-out infinite}.node-target .node-number{fill:#315d48}.target-dot{fill:#4e8066}.piece-shadow{fill:#23392e;opacity:.13}.piece-rabbit{filter:drop-shadow(0 4px 2px #8e77731d)}.piece-dog{filter:drop-shadow(0 4px 2px #8e6b461f)}.node-hit:focus-visible .node-base{stroke:#ed9a55;stroke-width:5}
+@keyframes pulse{0%,100%{opacity:.86}50%{opacity:.55}}
+.board-foot{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 3px 0;color:var(--muted);font-size:12px;line-height:1.5}.legend{display:flex;gap:13px;flex-wrap:wrap}.legend span{display:inline-flex;gap:6px;align-items:center}.legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block}.legend-r{background:#e6cbd1}.legend-d{background:#ed9a55}.legend-empty{background:#cbdacb}
+.sidebar{display:flex;flex-direction:column;gap:15px}.control-card{padding:19px}.status-label{font-size:11px;color:var(--muted);font-weight:950;letter-spacing:.13em;margin-bottom:10px}.status-main{font-size:22px;font-weight:1000;letter-spacing:-.03em;margin-bottom:6px}.status-desc{font-size:13px;color:#6f7e73;line-height:1.65;min-height:42px}.turn-illustration{height:94px;margin:14px 0 12px;border-radius:17px;background:linear-gradient(110deg,#f5e7df,#edf4e8);display:flex;align-items:center;justify-content:center;gap:13px;overflow:hidden}.turn-illustration svg{width:57px;height:66px}.vs{font-size:11px;font-weight:1000;color:#88948a;letter-spacing:.1em}.primary-btn{width:100%;border:0;border-radius:15px;padding:14px 16px;background:var(--leaf);color:white;font-weight:950;box-shadow:0 8px 18px #315d4826;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}.primary-btn:hover{background:var(--leaf-dark);transform:translateY(-1px);box-shadow:0 10px 20px #315d4833}.mode-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.mode-btn{border:1px solid #dfe6dc;border-radius:12px;background:#fff;padding:10px 8px;text-align:left;color:#56665a;cursor:pointer;transition:all .15s}.mode-btn strong{display:block;font-size:12px;margin-bottom:3px}.mode-btn small{display:block;font-size:10px;line-height:1.45;color:#819084}.mode-btn.active{border-color:#4e8066;background:#edf5e9;box-shadow:inset 0 0 0 1px #4e8066;color:#315d48}.mode-btn:disabled{opacity:.65;cursor:not-allowed}.primary-btn:active{transform:translateY(1px)}.secondary-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}.secondary-row .secondary-btn{padding:10px 4px;font-size:11px;white-space:nowrap}.secondary-btn{border:1px solid #dfe6dc;border-radius:12px;padding:10px 8px;background:#fff;color:#56665a;font-weight:850;font-size:12px;cursor:pointer}.secondary-btn:hover{background:#f4f8f1}.stop-btn{width:100%;margin-top:9px;border-color:#e8c9c4;background:#fff7f4;color:#9a4e40}.stop-btn:hover:not(:disabled){background:#ffebe5}.stop-btn:disabled{opacity:.48;cursor:not-allowed}.log-result.log-stopped{border-color:#e4dfd1;background:#f6f3eb;color:#77674c}.rule-card{padding:18px 19px}.rule-title{font-weight:950;font-size:14px;margin-bottom:13px;display:flex;gap:8px;align-items:center}.rule{display:flex;align-items:flex-start;gap:10px;margin:11px 0;font-size:12px;line-height:1.6;color:#65766a}.rule-mark{flex:0 0 24px;width:24px;height:24px;display:grid;place-items:center;background:#eef4e9;border-radius:8px}.progress-area{margin:14px 0 0}.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:7px}.progress-track{width:100%;height:7px;border-radius:9px;background:#eef0e8;overflow:hidden}.progress-fill{width:0;height:100%;background:linear-gradient(90deg,#79aa79,#edb16d);border-radius:9px;transition:width .3s}
+.log-card{padding:17px 19px}.log-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:14px;font-weight:950}.log-count{font-size:11px;color:#89968b;font-weight:800}.log-actions{display:flex;gap:8px;margin:0 0 11px}.log-action-btn{flex:1;border:1px solid #dfe6dc;border-radius:10px;padding:9px 8px;background:#fff;color:#56665a;font-size:11px;font-weight:900;cursor:pointer}.log-action-btn:hover{background:#f4f8f1}.log-action-btn:focus-visible{outline:3px solid #edbd83;outline-offset:2px}.log-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;max-height:360px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c8d8c7 #f4f6ef}.log-item{display:flex;justify-content:space-between;align-items:center;gap:9px;background:#fafaf5;border:1px solid #eff0e8;border-radius:10px;padding:9px 10px;font-size:12px;color:#5c6c60}.log-main{display:flex;gap:7px;align-items:center;min-width:0}.log-step{flex:0 0 auto;color:#879487;font-size:11px;font-weight:900}.log-role{font-weight:850;white-space:nowrap}.log-path{font-weight:950;color:#315d48;white-space:nowrap}.log-result{border:1px solid #d8e8d4;border-radius:10px;background:#eef6e9;padding:10px;font-size:12px;font-weight:950;color:#315d48}.log-empty{font-size:12px;color:#98a196;line-height:1.7;padding:4px 0}.footer{text-align:center;color:#97a196;font-size:11px;margin-top:23px;line-height:1.7}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;align-items:start}.control-card{grid-row:span 2}.intro{padding:22px}.intro-art{flex-basis:115px;width:115px}}
+@media(max-width:570px){.page{padding:14px 10px 22px}.topbar{margin-bottom:14px}.brand-name{font-size:16px}.brand-mark{width:42px;height:42px}.top-chip{font-size:10px;padding:8px 10px}.intro{padding:18px 16px;border-radius:20px;gap:8px;margin-bottom:14px}.intro p{font-size:12px}.intro-art{flex-basis:78px;width:78px;height:80px}.layout{gap:13px}.board-card{padding:14px 10px;border-radius:20px}.board-svg{min-width:510px}.board-foot{align-items:flex-start;flex-direction:column}.sidebar{display:flex}.control-card,.rule-card,.log-card{padding:16px}.status-main{font-size:20px}.turn-illustration{height:78px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><ellipse cx="23" cy="15" rx="8" ry="17" fill="#fff9f5" transform="rotate(-17 23 15)"/><ellipse cx="40" cy="14" rx="8" ry="18" fill="#fff9f5" transform="rotate(13 40 14)"/><ellipse cx="23" cy="15" rx="3" ry="10" fill="#f0c5cc" transform="rotate(-17 23 15)"/><ellipse cx="40" cy="14" rx="3" ry="10" fill="#f0c5cc" transform="rotate(13 40 14)"/><circle cx="32" cy="36" r="21" fill="#fff9f5"/><circle cx="25" cy="34" r="2.6" fill="#35463a"/><circle cx="39" cy="34" r="2.6" fill="#35463a"/><ellipse cx="32" cy="40" rx="3" ry="2.3" fill="#e897a5"/><path d="M32 42 Q28 47 25 43 M32 42 Q36 47 39 43" fill="none" stroke="#987b7d" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div><div class="brand-name">狗抓兔子</div><div class="brand-sub">HARE ESCAPE · 兔子逃脫戰</div></div>
+    </div>
+    <div class="top-chip">🐾 單人對戰 · 狗狗 AI</div>
+  </header>
+
+  <section class="intro">
+    <div class="intro-copy">
+      <div class="eyebrow">READY, HOP, GO!</div>
+      <h1>兔子，逃出狗狗包圍！</h1>
+      <p>你直接扮演兔子，不用選擇人物。狗狗 AI 會分析後續局面；若有獲勝策略，就優先走最快的必勝路線，不再隨機選擇。接著點擊棋盤上發亮的空位，帶兔子找出逃脫路線。</p>
+    </div>
+    <div class="intro-art" aria-hidden="true">
+      <svg viewBox="0 0 180 130"><ellipse cx="93" cy="116" rx="65" ry="7" fill="#a8bba2" opacity=".35"/><g transform="translate(32 52) rotate(-8)"><ellipse cx="0" cy="0" rx="18" ry="16" fill="#ed9a55"/><ellipse cx="-14" cy="-12" rx="8" ry="13" fill="#d97e42" transform="rotate(-30 -14 -12)"/><ellipse cx="10" cy="-14" rx="8" ry="13" fill="#d97e42" transform="rotate(25 10 -14)"/><circle cx="-5" cy="-2" r="2" fill="#533d2f"/><circle cx="7" cy="-2" r="2" fill="#533d2f"/><ellipse cx="1" cy="4" rx="4" ry="3" fill="#533d2f"/></g><g transform="translate(105 70)"><ellipse cx="-12" cy="-30" rx="9" ry="23" fill="#fffaf2" stroke="#dcc9c6" stroke-width="2" transform="rotate(-17 -12 -30)"/><ellipse cx="12" cy="-31" rx="9" ry="24" fill="#fffaf2" stroke="#dcc9c6" stroke-width="2" transform="rotate(15 12 -31)"/><ellipse cx="-12" cy="-30" rx="4" ry="15" fill="#f0c2cb" transform="rotate(-17 -12 -30)"/><ellipse cx="12" cy="-31" rx="4" ry="16" fill="#f0c2cb" transform="rotate(15 12 -31)"/><circle cx="0" cy="0" r="26" fill="#fffaf2" stroke="#dcc9c6" stroke-width="2"/><circle cx="-9" cy="-3" r="3" fill="#35463a"/><circle cx="9" cy="-3" r="3" fill="#35463a"/><ellipse cx="0" cy="4" rx="4" ry="3" fill="#df8d9d"/><path d="M0 7 Q-4 13 -8 8 M0 7 Q4 13 8 8" fill="none" stroke="#a88789" stroke-width="2" stroke-linecap="round"/><ellipse cx="-16" cy="5" rx="5" ry="3" fill="#f3bbc5" opacity=".75"/><ellipse cx="16" cy="5" rx="5" ry="3" fill="#f3bbc5" opacity=".75"/></g><path d="M139 30 q11 -12 20 0 q-9 -4 -20 0" fill="#fff" opacity=".8"/><path d="M151 19 l2 -5 m6 9 l5 -2" stroke="#94ae8f" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+  </section>
+
+  <main class="layout">
+    <section class="card board-card" aria-label="遊戲棋盤">
+      <div class="card-head"><div class="card-title"><span class="mini-icon">🌿</span>逃脫棋盤</div><div class="step-badge" id="stepBadge">尚未開始</div></div>
+      <div class="board-wrap" id="boardWrap">
+        <svg id="boardSvg" class="board-svg" viewBox="0 0 690 440" role="group" aria-label="狗抓兔子棋盤，共 11 個棋點"></svg>
+      </div>
+      <div class="board-foot"><div class="legend"><span><i class="legend-dot legend-r"></i>兔子（你）</span><span><i class="legend-dot legend-d"></i>狗狗（AI）</span><span><i class="legend-dot legend-empty"></i>空棋點</span></div><div>點擊發亮的空棋點即可移動兔子</div></div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="card control-card">
+        <div class="status-label">GAME STATUS</div>
+        <div class="status-main" id="statusMain">準備開始冒險！</div>
+        <div class="status-desc" id="statusDesc">你是兔子 🐰。按下開始對戰後，狗狗 AI 先行，不會出現選角畫面。</div>
+        <div class="turn-illustration" aria-hidden="true">
+          <svg viewBox="0 0 72 82"><ellipse cx="25" cy="21" rx="7" ry="17" fill="#fffaf2" stroke="#dcc9c6" stroke-width="1.5" transform="rotate(-14 25 21)"/><ellipse cx="46" cy="19" rx="7" ry="18" fill="#fffaf2" stroke="#dcc9c6" stroke-width="1.5" transform="rotate(13 46 19)"/><ellipse cx="25" cy="21" rx="3" ry="10" fill="#f0c2cb" transform="rotate(-14 25 21)"/><ellipse cx="46" cy="19" rx="3" ry="11" fill="#f0c2cb" transform="rotate(13 46 19)"/><circle cx="36" cy="47" r="23" fill="#fffaf2" stroke="#dcc9c6" stroke-width="1.5"/><circle cx="28" cy="44" r="2.5" fill="#344338"/><circle cx="44" cy="44" r="2.5" fill="#344338"/><ellipse cx="36" cy="50" rx="3.5" ry="2.5" fill="#df8d9d"/><path d="M36 52 Q32 57 29 53 M36 52 Q40 57 43 53" fill="none" stroke="#a88789" stroke-width="1.5"/></svg>
+          <span class="vs">VS</span>
+          <svg viewBox="0 0 72 82"><ellipse cx="18" cy="28" rx="12" ry="17" fill="#d97e42" transform="rotate(-22 18 28)"/><ellipse cx="55" cy="28" rx="12" ry="17" fill="#d97e42" transform="rotate(22 55 28)"/><ellipse cx="18" cy="28" rx="6" ry="10" fill="#f5bf88"/><ellipse cx="55" cy="28" rx="6" ry="10" fill="#f5bf88"/><circle cx="36" cy="44" r="25" fill="#edaa67" stroke="#d88b4c" stroke-width="1.5"/><ellipse cx="23" cy="39" rx="8" ry="11" fill="#d98a4a"/><circle cx="29" cy="41" r="2.5" fill="#49362b"/><circle cx="44" cy="41" r="2.5" fill="#49362b"/><ellipse cx="36" cy="49" rx="5" ry="4" fill="#49362b"/><path d="M36 53 q-5 6 -9 1 M36 53 q5 6 9 1" fill="none" stroke="#8f5837" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <div class="status-label" style="margin-top:4px;margin-bottom:8px">選擇 AI 模式</div>
+        <div class="mode-picker" role="group" aria-label="選擇 AI 模式">
+          <button class="mode-btn" id="easyModeBtn" type="button" aria-pressed="false"><strong>🌱 放水模式</strong><small>讓兔子多走幾步，AI 仍會選擇可確保獲勝的路線</small></button>
+          <button class="mode-btn active" id="strongModeBtn" type="button" aria-pressed="true"><strong>🔥 最強模式</strong><small>最佳策略，能贏就盡可能最快獲勝</small></button>
+        </div>
+        <button class="primary-btn" id="startBtn" type="button">🐰 開始對戰</button>
+        <button class="secondary-btn stop-btn" id="stopBtn" type="button" disabled>⏹️ 終止遊戲</button>
+        <div class="secondary-row"><button class="secondary-btn" id="soundBtn" type="button" aria-pressed="true">🔊 音效：開</button><button class="secondary-btn" id="musicBtn" type="button" aria-pressed="true">🎵 音樂：開</button><button class="secondary-btn" id="hintBtn" type="button">💡 提示走法</button></div>
+        <div class="progress-area"><div class="progress-label"><span>回合進度</span><span id="progressText">0 / 30 步</span></div><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div></div>
+      </section>
+
+      <section class="card rule-card">
+        <div class="rule-title"><span class="mini-icon">📜</span>遊戲目標</div>
+        <div class="rule"><span class="rule-mark">🏁</span><div><strong>兔子獲勝</strong><br>移動到 10 號出口，或讓狗狗完全無路可走。</div></div>
+        <div class="rule"><span class="rule-mark">🐕</span><div><strong>狗狗獲勝</strong><br>包圍兔子，讓兔子沒有任何合法走法。</div></div>
+        <div class="rule"><span class="rule-mark">👆</span><div><strong>怎麼移動</strong><br>狗狗由 AI 自動操作；輪到你時，點擊綠色發亮的空棋點。</div></div>
+      </section>
+
+      <section class="card log-card" aria-label="完整移動紀錄">
+        <div class="log-head"><span>📍 完整移動紀錄</span><span class="log-count" id="logCount">0 步</span></div>
+        <div class="log-actions">
+          <button class="log-action-btn" id="copyLogBtn" type="button">📋 複製完整紀錄</button>
+          <button class="log-action-btn" id="downloadLogBtn" type="button">⬇️ 下載紀錄</button>
+        </div>
+        <ol class="log-list" id="logList" aria-live="polite"><li class="log-empty">開始對戰後，兔子與狗狗的每一步都會依序保留在這裡。</li></ol>
+      </section>
+    </aside>
+  </main>
+  <footer class="footer">單檔 HTML · 角色圖像與背景音樂、音效皆由瀏覽器即時合成，不需下載素材<br>祝兔子好運，快快找到出口！</footer>
+</div>
+<script>
+'use strict';
+const RABBIT_MOVES = [[1,2,3],[0,2,4,5],[0,1,3,5],[0,2,5,6],[1,5,7],[1,2,3,4,6,7,8,9],[3,5,9],[4,5,8,10],[5,7,9,10],[5,6,8,10],[7,8,9]];
+const DOG_MOVES = [[],[0,2],[0,1,3],[0,2],[1,5],[1,2,3,4,6],[3,5],[4,5,8],[5,7,9],[5,6,8],[7,8,9]];
+const POS = [{x:70,y:220},{x:170,y:70},{x:170,y:220},{x:170,y:370},{x:320,y:70},{x:320,y:220},{x:320,y:370},{x:470,y:70},{x:470,y:220},{x:470,y:370},{x:620,y:220}];
+const INIT = ['R',null,null,null,null,null,null,'D',null,'D','D'];
+const strategyMemo = new Map();
+let board = INIT.slice(), ply = 0, started = false, busy = false, ended = false, stopped = false, winner = null, soundOn = true, musicOn = true, hintOn = false, audioCtx = null, aiTimer = null, musicTimer = null, musicStep = 0, musicGain = null, audioReadyPromise = null;
+let historyLog = [];
+let aiMode = 'strong';
+const $ = id => document.getElementById(id);
+function movesFor(side) {
+  const all = [], graph = side === 'D' ? DOG_MOVES : RABBIT_MOVES;
+  for (let from=0; from<board.length; from++) {
+    if (board[from] !== side) continue;
+    for (const to of graph[from]) if (board[to] === null) all.push([from,to]);
+    if (side === 'R') break;
+  }
+  return all;
+}
+function legalMovesFor(position, side) {
+  const all = [], graph = side === 'D' ? DOG_MOVES : RABBIT_MOVES;
+  for (let from = 0; from < position.length; from++) {
+    if (position[from] !== side) continue;
+    for (const to of graph[from]) if (position[to] === null) all.push([from, to]);
+    if (side === 'R') break;
+  }
+  return all;
+}
+function strategyKey(position, movesMade) {
+  return position.map(piece => piece || '.').join('') + '|' + movesMade;
+}
+// 結果值：兔子獲勝為 +1、狗狗獲勝為 -1。
+// 先選對自己最有利的勝負結果；同樣能贏時選最短步數，必敗時則盡量延後落敗。
+function solvePosition(position, movesMade) {
+  const key = strategyKey(position, movesMade);
+  const cached = strategyMemo.get(key);
+  if (cached) return cached;
+
+  const side = movesMade % 2 === 0 ? 'D' : 'R';
+  const legal = legalMovesFor(position, side);
+  if (!legal.length) {
+    // 正常對局會在上一手就判定結束；此分支用來完整處理邊界情況。
+    const terminal = { result: side === 'D' ? 1 : -1, distance: 0, move: null };
+    strategyMemo.set(key, terminal);
+    return terminal;
+  }
+
+  let best = null;
+  for (const [from, to] of legal) {
+    const next = position.slice();
+    next[to] = next[from];
+    next[from] = null;
+    const nextPly = movesMade + 1;
+    let candidate;
+
+    // 和正式對局保持相同的勝負判定順序。
+    if (side === 'R' && to === 10) {
+      candidate = { result: 1, distance: 1, move: [from, to] };
+    } else if (side === 'R' && legalMovesFor(next, 'D').length === 0) {
+      candidate = { result: 1, distance: 1, move: [from, to] };
+    } else if (side === 'D' && legalMovesFor(next, 'R').length === 0) {
+      candidate = { result: -1, distance: 1, move: [from, to] };
+    } else if (nextPly >= 30) {
+      candidate = { result: 1, distance: 1, move: [from, to] };
+    } else {
+      const child = solvePosition(next, nextPly);
+      candidate = { result: child.result, distance: child.distance + 1, move: [from, to] };
+    }
+
+    if (!best) {
+      best = candidate;
+      continue;
+    }
+    const betterResult = side === 'D'
+      ? candidate.result < best.result
+      : candidate.result > best.result;
+    if (betterResult) {
+      best = candidate;
+      continue;
+    }
+    if (candidate.result === best.result) {
+      const winningResult = side === 'D' ? -1 : 1;
+      const shouldWinSooner = candidate.result === winningResult;
+      if ((shouldWinSooner && candidate.distance < best.distance) ||
+          (!shouldWinSooner && candidate.distance > best.distance)) {
+        best = candidate;
+      }
+    }
+  }
+  strategyMemo.set(key, best);
+  return best;
+}
+function currentSide() { return ply % 2 === 0 ? 'D' : 'R'; }
+function rabbitPosition() { return board.indexOf('R'); }
+function pieceArt(type, x, y, r=25) {
+  if (type === 'R') return `<g class="piece-rabbit" transform="translate(${x} ${y}) scale(${r/25})">
+    <ellipse cx="-10" cy="-20" rx="6.2" ry="14.5" fill="#fffdf8" stroke="#d7c3c5" stroke-width="1.7" transform="rotate(-13 -10 -20)"/>
+    <ellipse cx="10" cy="-20" rx="6.2" ry="14.5" fill="#fffdf8" stroke="#d7c3c5" stroke-width="1.7" transform="rotate(13 10 -20)"/>
+    <ellipse cx="-10" cy="-20" rx="2.8" ry="9.3" fill="#f0bdc8" transform="rotate(-13 -10 -20)"/><ellipse cx="10" cy="-20" rx="2.8" ry="9.3" fill="#f0bdc8" transform="rotate(13 10 -20)"/>
+    <circle cx="0" cy="2" r="19.5" fill="#fffdf8" stroke="#d7c3c5" stroke-width="1.7"/>
+    <ellipse cx="-7.5" cy="4" rx="4" ry="2.4" fill="#f3c3cc" opacity=".9"/><ellipse cx="7.5" cy="4" rx="4" ry="2.4" fill="#f3c3cc" opacity=".9"/>
+    <circle cx="-6" cy="0" r="2.3" fill="#2f4236"/><circle cx="6" cy="0" r="2.3" fill="#2f4236"/><ellipse cx="0" cy="5" rx="3" ry="2.2" fill="#dd8998"/>
+    <path d="M0 7 Q-3 11 -6 8 M0 7 Q3 11 6 8" fill="none" stroke="#9d7c80" stroke-width="1.4" stroke-linecap="round"/>
+  </g>`;
+  return `<g class="piece-dog" transform="translate(${x} ${y}) scale(${r/25})">
+    <ellipse cx="-16" cy="-10" rx="9.5" ry="14" fill="#cf7940" transform="rotate(-25 -16 -10)"/><ellipse cx="16" cy="-10" rx="9.5" ry="14" fill="#cf7940" transform="rotate(25 16 -10)"/>
+    <ellipse cx="-16" cy="-10" rx="4.5" ry="8" fill="#f4bd83" transform="rotate(-25 -16 -10)"/><ellipse cx="16" cy="-10" rx="4.5" ry="8" fill="#f4bd83" transform="rotate(25 16 -10)"/>
+    <circle cx="0" cy="2" r="19.5" fill="#efa45f" stroke="#d78a4b" stroke-width="1.7"/><ellipse cx="-11" cy="-1" rx="6" ry="8.5" fill="#d98a4b" opacity=".8"/>
+    <circle cx="-6" cy="0" r="2.3" fill="#49372d"/><circle cx="6" cy="0" r="2.3" fill="#49372d"/><ellipse cx="0" cy="5" rx="4" ry="3.2" fill="#49372d"/>
+    <path d="M0 8 Q-3 12 -6 9 M0 8 Q3 12 6 9" fill="none" stroke="#8b5637" stroke-width="1.4" stroke-linecap="round"/>
+  </g>`;
+}
+function edgesSvg() {
+  const set = new Set();
+  for (const graph of [RABBIT_MOVES,DOG_MOVES]) graph.forEach((neighbors,from)=>neighbors.forEach(to=>{const a=Math.min(from,to),b=Math.max(from,to);if(a!==b)set.add(a+'-'+b)}));
+  return [...set].map(pair=>{const [a,b]=pair.split('-').map(Number),p=POS[a],q=POS[b];return `<g><line class="edge" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/><line class="edge-accent" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/></g>`}).join('');
+}
+const edgeMarkup = edgesSvg();
+function renderBoard() {
+  const svg = $('boardSvg');
+  const targets = started && !ended && !busy && currentSide()==='R' ? movesFor('R').map(m=>m[1]) : [];
+  const hintTargets = hintOn && started && !ended && currentSide()==='R' ? targets : [];
+  let markup = `<defs><radialGradient id="boardGlow"><stop offset="0" stop-color="#fffdf5"/><stop offset="1" stop-color="#eef5e9"/></radialGradient></defs><rect x="12" y="12" width="666" height="416" rx="26" fill="url(#boardGlow)" opacity=".55"/>${edgeMarkup}`;
+  // Exit at node 10
+  markup += `<g opacity=".95"><circle cx="${POS[10].x}" cy="${POS[10].y}" r="39" fill="#f8e5c9" stroke="#e0bd86" stroke-width="2" stroke-dasharray="5 5"/><path d="M605 205 L620 187 L635 205 M620 188 V218" fill="none" stroke="#c78e4c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><text x="620" y="274" text-anchor="middle" font-size="11" font-weight="900" fill="#b17b3d">出口</text></g>`;
+  for(let i=0;i<POS.length;i++){
+    const {x,y}=POS[i], piece=board[i], target=targets.includes(i), hinted=hintTargets.includes(i);
+    markup += `<g class="node-hit${target?' node-target':''}" data-node="${i}" tabindex="${started?0:-1}" role="button" aria-label="棋點 ${i}${piece==='R'?'，兔子':piece==='D'?'，狗狗':'，空位'}${target?'，可移動到此處':''}">`;
+    if(target) markup += `<circle class="target-ring" cx="${x}" cy="${y}" r="34"/>`;
+    else markup += `<circle class="node-base" cx="${x}" cy="${y}" r="30"/>`;
+    if(hinted) markup += `<circle cx="${x}" cy="${y}" r="39" fill="none" stroke="#eea253" stroke-width="3" stroke-dasharray="4 5"/>`;
+    if(piece) markup += `<ellipse class="piece-shadow" cx="${x}" cy="${y+26}" rx="18" ry="5"/>${pieceArt(piece,x,y,25)}`;
+    else if(target) markup += `<circle class="target-dot" cx="${x}" cy="${y}" r="6"/>`;
+    else markup += `<circle cx="${x}" cy="${y}" r="5" fill="#dbe5d8"/>`;
+    markup += `<text class="node-number" x="${x}" y="${y+49}">${i}</text></g>`;
+  }
+  svg.innerHTML=markup;
+}
+function updateStatus(main,desc){$('statusMain').textContent=main;$('statusDesc').textContent=desc;}
+function renderLog(){
+  const list=$('logList');
+  const wasNearBottom=list.scrollHeight-list.scrollTop-list.clientHeight<36;
+  $('logCount').textContent=historyLog.length+' 步';
+  if(!historyLog.length){
+    list.innerHTML='<li class="log-empty">開始對戰後，兔子與狗狗的每一步都會依序保留在這裡。</li>';
+    return;
+  }
+  list.innerHTML=historyLog.map(item=>`<li class="log-item"><span class="log-main"><span class="log-step">#${item.step}</span><span class="log-role">${item.side==='R'?'🐰 兔子':'🐕 狗狗'}</span></span><span class="log-path">${item.from} → ${item.to}</span></li>`).join('');
+  if(ended){const result=document.createElement('li');result.className='log-result'+(stopped?' log-stopped':'');result.textContent=stopped?'⏹️ 對局已由玩家終止，無勝負結果。共 '+historyLog.length+' 步。':'🏁 對局結束：'+(winner==='R'?'兔子獲勝':'狗狗獲勝')+'。共 '+historyLog.length+' 步。';list.appendChild(result);}
+  if(wasNearBottom)list.scrollTop=list.scrollHeight;
+}
+function formatHistoryText(){
+  const lines=['狗抓兔子｜完整移動紀錄',`AI 模式：${aiMode==='easy'?'放水模式':'最強模式'}`,`總步數：${historyLog.length}/30`,`初始位置：兔子在 0 號；狗狗在 7、9、10 號`,''];
+  if(!historyLog.length) lines.push('目前尚無移動紀錄。');
+  else for(const item of historyLog) lines.push(`第 ${item.step} 步｜${item.side==='R'?'兔子':'狗狗'}：${item.from} → ${item.to}`);
+  if(ended) lines.push('',stopped?'對局結果：玩家手動終止，無勝負結果。':`對局結果：${winner==='R'?'兔子獲勝':'狗狗獲勝'}`);
+  return lines.join('\n');
+}
+async function copyFullHistory(){
+  const text=formatHistoryText();
+  try{
+    if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(text);
+    else {
+      const area=document.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();
+      const copied=document.execCommand('copy');area.remove();if(!copied)throw new Error('clipboard unavailable');
+    }
+    const btn=$('copyLogBtn');btn.textContent='✅ 已複製';window.setTimeout(()=>{btn.textContent='📋 複製完整紀錄';},1600);
+  }catch(error){updateStatus('無法自動複製紀錄','請改用「下載紀錄」保存所有移動紀錄。');}
+}
+function downloadFullHistory(){
+  const blob=new Blob(['\ufeff',formatHistoryText()],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='狗抓兔子-完整移動紀錄.txt';document.body.appendChild(link);link.click();link.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function render() {
+  renderBoard();
+  $('stepBadge').textContent=started?`第 ${Math.min(ply+1,30)} / 30 步`:'尚未開始';
+  $('progressText').textContent=`${ply} / 30 步`;
+  $('progressFill').style.width=Math.min(100,ply/30*100)+'%';
+  $('startBtn').textContent=started?'↻ 重新開始':'🐰 開始對戰';
+  $('stopBtn').disabled=!(started&&!ended);
+  $('easyModeBtn').disabled=started&&!ended;
+  $('strongModeBtn').disabled=started&&!ended;
+  if(!started) updateStatus('準備開始冒險！','你是兔子 🐰。按下開始對戰後，狗狗 AI 先行，不會出現選角畫面。');
+  else if(ended && stopped) updateStatus('對局已終止 ⏹️','本局已停止，移動紀錄已保留。現在可以切換 AI 模式，再按「重新開始」開啟新的一局。');
+  else if(ended){
+    if(winner==='R') updateStatus('兔子成功逃脫！🎉',ply>=30?'步數已達上限，依照本遊戲規則判定兔子獲勝。':'兔子完成目標，這場逃脫戰由你獲勝！');
+    else updateStatus('兔子被包圍了！🐾','狗狗已經封住所有走法。重新開始，再找一條逃脫路線吧！');
+  } else if(busy) updateStatus('狗狗正在計算最佳走法…','AI 會比較後續勝負與需要的步數；能獲勝時優先選擇最快的必勝路線。');
+  else if(currentSide()==='R') updateStatus('輪到你了！🐰',`${aiMode==='easy'?'放水模式':'最強模式'}：點擊棋盤上綠色發亮的空位移動兔子。10 號是出口！`);
+  else updateStatus('狗狗準備行動…',aiMode==='easy'?'放水模式：狗狗會讓對局延長，但仍努力確保最後獲勝。':'最強模式：狗狗會尋找最快的必勝路線。');
+  renderLog();
+}
+async function ensureAudio(){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return false;
+  try{
+    if(!audioCtx) audioCtx=new AC();
+    if(audioCtx.state==='suspended') await audioCtx.resume();
+    // Some browsers need another resume after their first gesture; keep this check explicit.
+    return audioCtx.state==='running';
+  }catch(error){return false;}
+}
+// 使用 Web Audio 即時合成循環旋律，不需要外部音檔或網路連線。
+const MUSIC_MELODY = [523.25,659.25,783.99,null,659.25,783.99,880,null,783.99,659.25,587.33,523.25,392,null,523.25,587.33,659.25,null,587.33,523.25,440,392,523.25,null];
+const MUSIC_BASS = [130.81,110,174.61,196,146.83,110,174.61,196];
+function musicNote(freq, duration, when, type='sine', volume=.09){
+  if(!audioCtx||!musicGain||!freq||audioCtx.state!=='running')return;
+  try{
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    osc.type=type;osc.frequency.setValueAtTime(freq,when);
+    gain.gain.setValueAtTime(.0001,when);
+    gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),when+.025);
+    gain.gain.setValueAtTime(Math.max(.0002,volume),Math.max(when+.026,when+duration-.045));
+    gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    osc.connect(gain);gain.connect(musicGain);osc.start(when);osc.stop(when+duration+.03);
+  }catch(e){/* 音樂錯誤不影響遊戲 */}
+}
+async function startBackgroundMusic(){
+  if(!musicOn)return false;
+  const ready=await ensureAudio();
+  if(!ready){updateStatus('瀏覽器尚未啟用音訊','請確認電腦音量未靜音，並再次點擊「🎵 音樂」按鈕。');return false;}
+  if(!musicGain){musicGain=audioCtx.createGain();musicGain.gain.value=.95;musicGain.connect(audioCtx.destination);}
+  musicGain.gain.cancelScheduledValues(audioCtx.currentTime);
+  musicGain.gain.setTargetAtTime(.95,audioCtx.currentTime,.035);
+  if(musicTimer!==null)return true;
+  const beat=.32;
+  const tick=()=>{
+    if(!musicOn||!audioCtx||!musicGain||audioCtx.state!=='running')return;
+    const now=audioCtx.currentTime+.025, note=MUSIC_MELODY[musicStep%MUSIC_MELODY.length];
+    if(note)musicNote(note,.25,now,'sine',.19);
+    if(musicStep%4===0){const bass=MUSIC_BASS[(musicStep/4)%MUSIC_BASS.length];musicNote(bass,.9,now,'triangle',.085);musicNote(bass*2,.55,now,'sine',.04);}
+    musicStep=(musicStep+1)%MUSIC_MELODY.length;
+  };
+  tick();musicTimer=window.setInterval(tick,beat*1000);
+  return true;
+}
+function stopBackgroundMusic(){
+  if(musicTimer!==null){window.clearInterval(musicTimer);musicTimer=null;}
+  if(audioCtx&&musicGain){musicGain.gain.cancelScheduledValues(audioCtx.currentTime);musicGain.gain.setTargetAtTime(.0001,audioCtx.currentTime,.035);}
+}
+function tone(freq,duration=.11,type='sine',volume=.055,delay=0){
+  if(!soundOn)return;
+  try{
+    // 音效通常在遊戲開始後呼叫，此時 AudioContext 已由按鈕手勢解鎖。
+    if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();}
+    if(audioCtx.state!=='running'){audioCtx.resume().catch(()=>{});}
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),when=audioCtx.currentTime+delay;
+    osc.type=type;osc.frequency.setValueAtTime(freq,when);
+    gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(Math.max(.0002,Math.min(.8,volume*2.2)),when+.015);gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    osc.connect(gain);gain.connect(audioCtx.destination);osc.start(when);osc.stop(when+duration+.025);
+  }catch(e){/* 音效失敗不影響遊戲 */}
+}
+function playMove(side){tone(side==='R'?660:220,.10,side==='R'?'sine':'triangle',.06);tone(side==='R'?880:165,.08,'sine',.045,.07);}
+function playVictory(win){if(win==='R'){tone(523,.18,'sine',.065);tone(659,.18,'sine',.065,.13);tone(784,.28,'sine',.065,.26);}else{tone(330,.2,'triangle',.06);tone(260,.24,'triangle',.05,.16);tone(196,.32,'triangle',.05,.34);}}
+function applyMove(from,to,side){
+  if(board[from]!==side||board[to]!==null)return false;
+  const legal=movesFor(side).some(m=>m[0]===from&&m[1]===to);if(!legal)return false;
+  board[to]=board[from];board[from]=null;ply++;
+  historyLog.push({side,from,to,step:ply});
+  playMove(side);
+  // 勝負判定遵照上傳 Python 程式：兔子抵達 10 號、狗無合法走法，或達到 30 步皆由兔子勝；兔子無合法走法則狗勝。
+  if(side==='R'&&to===10) winner='R';
+  else if(side==='R'&&movesFor('D').length===0) winner='R';
+  else if(side==='D'&&movesFor('R').length===0) winner='D';
+  else if(ply>=30) winner='R';
+  if(winner){ended=true;busy=false;hintOn=false;$('easyModeBtn').disabled=false;$('strongModeBtn').disabled=false;playVictory(winner);render();return true;}
+  if(side==='R'){
+    busy=true;hintOn=false;render();
+    if(aiTimer!==null) window.clearTimeout(aiTimer);
+    aiTimer=window.setTimeout(()=>{aiTimer=null;doAIMove();},420);
+  }else{
+    busy=false;hintOn=false;render();
+  }
+  return true;
+}
+function doAIMove(){
+  if(!started||ended)return;
+  const legal=movesFor('D');
+  if(!legal.length){winner='R';ended=true;busy=false;$('easyModeBtn').disabled=false;$('strongModeBtn').disabled=false;playVictory(winner);render();return;}
+
+  // 最強模式選擇最快必勝步；放水模式則在「仍可確保狗狗獲勝」的走法中，挑選較慢的路線。
+  const analysis = solvePosition(board, ply);
+  let chosen = analysis.move;
+  if (aiMode === 'easy') {
+    const winningOptions = [];
+    for (const [from, to] of legal) {
+      const next = board.slice();
+      next[to] = next[from]; next[from] = null;
+      const nextPly = ply + 1;
+      let outcome;
+      if (legalMovesFor(next, 'R').length === 0) outcome = { result: -1, distance: 1 };
+      else if (nextPly >= 30) outcome = { result: 1, distance: 1 };
+      else {
+        const child = solvePosition(next, nextPly);
+        outcome = { result: child.result, distance: child.distance + 1 };
+      }
+      if (outcome.result === -1) winningOptions.push({ move: [from, to], distance: outcome.distance });
+    }
+    if (winningOptions.length) {
+      // 不隨機：同樣能確保獲勝時，選擇預估步數較長的走法，給玩家更多回合。
+      winningOptions.sort((a,b) => b.distance - a.distance || a.move[0] - b.move[0] || a.move[1] - b.move[1]);
+      chosen = winningOptions[0].move;
+    }
+  }
+  if(!chosen || !legal.some(move => move[0]===chosen[0] && move[1]===chosen[1])) {
+    chosen = legal[0]; // 保護性備援：任何情況都只走合法棋步。
+  }
+  busy=false;
+  const ok=applyMove(chosen[0],chosen[1],'D');
+  if(!ok){const fallback=movesFor('D');if(fallback.length)applyMove(fallback[0][0],fallback[0][1],'D');else{winner='R';ended=true;render();}}
+}
+function setAIMode(mode){
+  if(started && !ended) return;
+  aiMode=mode;
+  $('easyModeBtn').classList.toggle('active',mode==='easy');
+  $('strongModeBtn').classList.toggle('active',mode==='strong');
+  $('easyModeBtn').setAttribute('aria-pressed',String(mode==='easy'));
+  $('strongModeBtn').setAttribute('aria-pressed',String(mode==='strong'));
+  if(!started || stopped) {
+    updateStatus(stopped?'對局已終止 ⏹️':'準備開始冒險！',mode==='easy'?(stopped?'已切換為放水模式；原對局紀錄已保留，按「重新開始」即可套用。':'已選擇放水模式：狗狗會讓對局延長，但仍會努力確保獲勝。'):(stopped?'已切換為最強模式；原對局紀錄已保留，按「重新開始」即可套用。':'已選擇最強模式：狗狗會尋找最快的必勝路線。'));
+  }
+}
+async function startGame(){
+  if(aiTimer!==null){window.clearTimeout(aiTimer);aiTimer=null;}
+  // 必須在玩家點擊事件中啟用 AudioContext，避免瀏覽器自動播放政策擋住聲音。
+  const audioReady=await ensureAudio();
+  if(musicOn && audioReady) await startBackgroundMusic();
+  if(!audioReady){musicOn=false;$('musicBtn').textContent='🎵 音樂：關';$('musicBtn').setAttribute('aria-pressed','false');}
+  board=INIT.slice();ply=0;started=true;busy=true;ended=false;stopped=false;winner=null;hintOn=false;historyLog=[];
+  tone(523,.10,'sine',.055);tone(659,.12,'sine',.055,.10);
+  render();
+  if(!audioReady) updateStatus('遊戲開始！音訊尚未啟用','請確認電腦與瀏覽器未靜音，再點擊「🎵 音樂：開」重新啟用音訊。');
+  aiTimer=window.setTimeout(()=>{aiTimer=null;doAIMove();},380);
+}
+function stopGame(){
+  if(!started || ended) return;
+  if(aiTimer!==null){window.clearTimeout(aiTimer);aiTimer=null;}
+  busy=false;ended=true;stopped=true;winner=null;hintOn=false;
+  tone(392,.09,'triangle',.025);
+  render();
+}
+$('easyModeBtn').addEventListener('click',()=>setAIMode('easy'));
+$('strongModeBtn').addEventListener('click',()=>setAIMode('strong'));
+$('startBtn').addEventListener('click',startGame);
+$('stopBtn').addEventListener('click',stopGame);
+$('copyLogBtn').addEventListener('click',copyFullHistory);
+$('downloadLogBtn').addEventListener('click',downloadFullHistory);
+$('soundBtn').addEventListener('click',async()=>{soundOn=!soundOn;$('soundBtn').textContent=soundOn?'🔊 音效：開':'🔇 音效：關';$('soundBtn').setAttribute('aria-pressed',String(soundOn));if(soundOn){await ensureAudio();tone(660,.12,'sine',.065);}});
+$('musicBtn').addEventListener('click',async()=>{musicOn=!musicOn;$('musicBtn').textContent=musicOn?'🎵 音樂：開':'🎵 音樂：關';$('musicBtn').setAttribute('aria-pressed',String(musicOn));if(musicOn){const ok=await startBackgroundMusic();if(!ok){musicOn=false;$('musicBtn').textContent='🎵 音樂：關';$('musicBtn').setAttribute('aria-pressed','false');}}else stopBackgroundMusic();});
+$('hintBtn').addEventListener('click',()=>{if(!started||ended){updateStatus('先開始對戰吧！','按下「開始對戰」後，狗狗先走，接著就可以看到兔子的合法走法。');return;}if(currentSide()!=='R'||busy){updateStatus('等兔子回合喔！','狗狗 AI 正在行動，等它走完就會顯示可移動的位置。');return;}hintOn=!hintOn;render();if(hintOn)tone(740,.09,'sine',.025);});
+$('boardSvg').addEventListener('click',event=>{
+  const node=event.target.closest('[data-node]');if(!node)return;
+  const to=Number(node.dataset.node);
+  if(!started){updateStatus('準備開始冒險！','按下「開始對戰」後就直接扮演兔子，不用選擇人物。');return;}
+  if(ended){updateStatus('這局已經結束','按「重新開始」就能再挑戰一次。');return;}
+  if(busy||currentSide()!=='R')return;
+  const from=rabbitPosition();
+  if(to===from){updateStatus('兔子準備好了！🐰','點擊綠色發亮的空位就能移動兔子。');tone(450,.07,'sine',.018);return;}
+  if(movesFor('R').some(m=>m[0]===from&&m[1]===to)){applyMove(from,to,'R');}
+  else{updateStatus('這個位置不能走喔','請點擊綠色發亮的空棋點，兔子只能沿棋盤連線移動。');tone(170,.08,'triangle',.018);}
+});
+$('boardSvg').addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('[data-node]')){event.preventDefault();event.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
+render();
+</script>
+</body>
+</html>

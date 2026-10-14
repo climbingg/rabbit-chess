@@ -1,4 +1,5 @@
 import random
+import pickle
 
 
 def print_point() -> None:
@@ -116,6 +117,8 @@ dic: dict[tuple, dict] = {}
 
 dfs()
 
+with open("data.pkl", "wb") as file:
+    pickle.dump(dic, file)
 
 def main() -> None:
     """主程式"""
